@@ -1,7 +1,10 @@
 package com.example.eatitv2;
 
+import android.icu.util.ULocale;
 import android.os.Bundle;
 
+import com.example.eatitv2.EventBus.CategoryClick;
+import com.example.eatitv2.EventBus.FoodItemClick;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -22,6 +25,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.view.Menu;
+import android.widget.Toast;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 public class HomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -49,8 +57,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_home, R.id.nav_gallery, R.id.nav_slideshow,
-                R.id.nav_tools, R.id.nav_share, R.id.nav_send)
+                R.id.nav_home, R.id.nav_menu, R.id.nav_food_detail,
+                R.id.nav_tools, R.id.nav_share, R.id.nav_food_list)
                 .setDrawerLayout(drawer)
                 .build();
         navController = Navigation.findNavController(this, R.id.nav_host_fragment);
@@ -85,13 +93,48 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             case R.id.nav_home:
                 navController.navigate(R.id.nav_home);
                 break;
-            case R.id.nav_gallery:
+            case R.id.nav_menu:
             {
-                navController.navigate(R.id.nav_gallery);
+                navController.navigate(R.id.nav_menu);
                 break;
             }
         }
 
         return true;
+    }
+
+    //Event bus
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+
+    }
+
+    @Override
+    protected void onStop() {
+        EventBus.getDefault().unregister(this);
+        super.onStop();
+    }
+
+    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
+    public void onCategorySelected(CategoryClick event)
+    {
+        if(event.isSuccess())
+        {
+            navController.navigate(R.id.nav_food_list);
+            //Toast.makeText(this, "CATEGORY "+event.getCategoryModel().getName(), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
+    public void onFoodItemClick(FoodItemClick event)
+    {
+        if(event.isSuccess())
+        {
+            navController.navigate(R.id.nav_food_detail);
+
+        }
     }
 }
