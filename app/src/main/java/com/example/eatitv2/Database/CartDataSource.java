@@ -24,9 +24,9 @@ public interface CartDataSource {
 
     Completable insertOrReplaceAll(CartItem... cartItems);
 
-    Single<Integer> updateCartItems(CartItem cartItems);
+    Single<Integer> updateCartItems(CartItem cartItem);
 
-    Single<Integer> deleteCartItems(CartItem cartItems);
+    Single<Integer> deleteCartItem(CartItem cartItem);
 
     Single<Integer> cleanCart (String uid);
 }

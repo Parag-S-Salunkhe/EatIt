@@ -1,6 +1,7 @@
 package com.example.eatitv2.Database;
 
 
+
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;

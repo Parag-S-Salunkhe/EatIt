@@ -22,7 +22,7 @@ public interface CartDAO { //database access object
         @Query("SELECT COUNT(*) from Cart WHERE uid=:uid")
         Single<Integer> countItemInCart (String uid);
 
-        @Query("SELECT SUM(foodPrice*foodQuantity) + (foodExtraPrice*foodQuantity) WHERE uid=:uid")
+        @Query("SELECT SUM(foodPrice*foodQuantity) + (foodExtraPrice*foodQuantity) FROM cart WHERE uid=:uid")
         Single<Long> sumPriceInCart (String uid);
 
         @Query("SELECT * FROM Cart WHERE foodId=:foodId AND uid=:uid")
@@ -32,10 +32,10 @@ public interface CartDAO { //database access object
         Completable insertOrReplaceAll(CartItem... cartItems);
 
         @Update(onConflict = OnConflictStrategy.REPLACE)
-        Single<Integer> updateCartItems(CartItem cartItems);
+        Single<Integer> updateCartItems(CartItem cartItem);
 
         @Delete
-        Single<Integer> deleteCartItems(CartItem cartItems);
+        Single<Integer> deleteCartItem(CartItem cartItem);
 
         @Query("DELETE FROM Cart WHERE uid=:uid")
         Single<Integer> cleanCart (String uid);
